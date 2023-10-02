@@ -1006,9 +1006,6 @@ def main():
             elements[0].style.width = '100%';
             elements[0].style.fontWeight = 'bold';
             elements[0].style.backgroundColor = '#17e88f';
-            elements[1].style.width = '100%';
-            elements[1].style.fontWeight = 'bold';
-            elements[1].style.backgroundColor = '#17e88f';
             </script>
             """
             )
@@ -1029,9 +1026,6 @@ def main():
             elements[0].style.width = '100%';
             elements[0].style.fontWeight = 'bold';
             elements[0].style.backgroundColor = '#17e88f';
-            elements[1].style.width = '100%';
-            elements[1].style.fontWeight = 'bold';
-            elements[1].style.backgroundColor = '#17e88f';
             </script>
             """
             )

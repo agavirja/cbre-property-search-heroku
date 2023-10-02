@@ -27,7 +27,7 @@ API_KEY = st.secrets["API_KEY"]
 pdfcrowduser = st.secrets["pdfcrowduser"]
 pdfcrowdpass = st.secrets["pdfcrowdpass"]
 
-@st.experimental_memo
+st.cache_data
 def homogenizar_texto(texto):
     # Remover múltiples espacios en blanco
     texto = re.sub(r'\s+', ' ', texto)
@@ -42,7 +42,7 @@ def homogenizar_texto(texto):
     texto = texto.replace('Código Fincaraíz',' ')
     return texto
 
-@st.experimental_memo
+st.cache_data
 def getdata(code,tiponegocio):
     tabla  = f'data_market_{tiponegocio.lower()}_dpto_11'
     engine = create_engine(f'mysql+mysqlconnector://{user}:{password}@{host}/{schema}')
@@ -93,7 +93,7 @@ if st.session_state.data_ficha.empty:
             st.session_state.vardep = 'valorventa'
         if 'arriendo' in tiponegocio.lower():
             st.session_state.vardep = 'valorarriendo'   
-        st.experimental_rerun()
+        st.rerun()
 else:
     if 'code' in st.session_state:
         code = st.session_state.code
