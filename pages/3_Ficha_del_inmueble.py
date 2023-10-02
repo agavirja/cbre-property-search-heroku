@@ -1,52 +1,28 @@
 import streamlit as st
 import pdfcrowd
 import pandas as pd
-import re
 import folium
 import streamlit.components.v1 as components
 
 from streamlit_folium import st_folium
 from bs4 import BeautifulSoup
-from sqlalchemy import create_engine
 
 import tempfile
 from datetime import datetime
 import mapbox
+
+from scripts.getdata import homogenizar_texto,getinfoficha
 
 st.set_page_config(layout="wide",initial_sidebar_state="collapsed",page_icon ="https://www.cbre.com/-/media/project/cbre/dotcom/global/unsorted/favicon_lg.png?rev=f6bed35a1dfb4fac9ede077cef213618")
 
 # https://pdfcrowd.com/pricing/api/?api=v2
 # https://pdfcrowd.com/user/account/stats/
 
-user     = st.secrets["user_bigdata"]
-password = st.secrets["password_bigdata"]
-host     = st.secrets["host_bigdata"]
-schema   = st.secrets["schema_bigdata"]
-
 API_KEY = st.secrets["API_KEY"]
 pdfcrowduser = st.secrets["pdfcrowduser"]
 pdfcrowdpass = st.secrets["pdfcrowdpass"]
 
-st.cache_data
-def homogenizar_texto(texto):
-    # Remover múltiples espacios en blanco
-    texto = re.sub(r'\s+', ' ', texto)
-    # Poner todo en minúsculas, a menos que la palabra empiece después de una puntuación
-    texto = re.sub(r'(?<=[^\w\s])\w+', lambda x: x.group().lower(), texto)
-    # Remover caracteres no alfanuméricos
-    texto = re.sub(r'[^\w\s.,;]', '', texto)
-    # Remover cuando hay codigos dentro del texto
-    texto = re.sub(r'C\w+ Fincaraíz: \d+', '', texto)
-    # Remover telefono
-    texto = re.sub(r'\b\d{7,}\b', '', texto)
-    texto = texto.replace('Código Fincaraíz',' ')
-    return texto
 
-st.cache_data
-def getdata(code,tiponegocio):
-    tabla  = f'data_market_{tiponegocio.lower()}_dpto_11'
-    engine = create_engine(f'mysql+mysqlconnector://{user}:{password}@{host}/{schema}')
-    return pd.read_sql_query(f"""SELECT  * FROM cbre.{tabla} WHERE id='{code}'""", engine)
 
 # obtener los argumentos de la url
 args = st.experimental_get_query_params()
@@ -85,7 +61,7 @@ if st.session_state.data_ficha.empty:
             st.session_state.vardep = 'valorarriendo'        
         
     if code!='' and  any([x for x in ['venta','arriendo'] if x in tiponegocio.lower()]):
-        st.session_state.data_ficha = getdata(code,tiponegocio)
+        st.session_state.data_ficha = getinfoficha(code,tiponegocio)
         st.session_state.code = code
         if st.session_state.data_ficha.empty:
             st.error('Inmueble no encontrado')

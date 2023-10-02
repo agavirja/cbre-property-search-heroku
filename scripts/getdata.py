@@ -625,3 +625,31 @@ def streetviewapi(latitud,longitud):
         #return response.url
     else:
         return None
+    
+#-----------------------------------------------------------------------------#
+# FICHA DEL INMUEBLE
+#-----------------------------------------------------------------------------#
+st.cache_data()
+def homogenizar_texto(texto):
+    # Remover múltiples espacios en blanco
+    texto = re.sub(r'\s+', ' ', texto)
+    # Poner todo en minúsculas, a menos que la palabra empiece después de una puntuación
+    texto = re.sub(r'(?<=[^\w\s])\w+', lambda x: x.group().lower(), texto)
+    # Remover caracteres no alfanuméricos
+    texto = re.sub(r'[^\w\s.,;]', '', texto)
+    # Remover cuando hay codigos dentro del texto
+    texto = re.sub(r'C\w+ Fincaraíz: \d+', '', texto)
+    # Remover telefono
+    texto = re.sub(r'\b\d{7,}\b', '', texto)
+    texto = texto.replace('Código Fincaraíz',' ')
+    return texto
+
+st.cache_data()
+def getinfoficha(code,tiponegocio):
+    user     = st.secrets["user_bigdata"]
+    password = st.secrets["password_bigdata"]
+    host     = st.secrets["host_bigdata"]
+    schema   = st.secrets["schema_bigdata"]
+    tabla    = f'data_market_{tiponegocio.lower()}_dpto_11'
+    engine   = create_engine(f'mysql+mysqlconnector://{user}:{password}@{host}/{schema}')
+    return pd.read_sql_query(f"""SELECT  * FROM cbre.{tabla} WHERE id='{code}'""", engine)
