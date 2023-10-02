@@ -1002,7 +1002,7 @@ def main():
             components.html(
                 """
             <script>
-            const elements = window.parent.document.querySelectorAll('.stDownloadButton button')
+            const elements = window.parent.document.querySelectorAll('.stButton button')
             elements[0].style.width = '100%';
             elements[0].style.fontWeight = 'bold';
             elements[0].style.backgroundColor = '#17e88f';
@@ -1022,7 +1022,7 @@ def main():
             components.html(
                 """
             <script>
-            const elements = window.parent.document.querySelectorAll('.stDownloadButton button')
+            const elements = window.parent.document.querySelectorAll('.stButton button')
             elements[0].style.width = '100%';
             elements[0].style.fontWeight = 'bold';
             elements[0].style.backgroundColor = '#17e88f';
