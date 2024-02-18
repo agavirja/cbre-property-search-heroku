@@ -11,7 +11,7 @@ from streamlit_folium import st_folium
 from folium.plugins import Draw
 from bs4 import BeautifulSoup
 
-# streamlit run D:\Dropbox\Empresa\CBRE\PROYECTO_BUSQUEDA_INMUEBLES\APP\app.py
+# streamlit run D:\Dropbox\Empresa\CBRE\PROYECTO_BUSQUEDA_INMUEBLES\APP_heroku\app.py
 # https://streamlit.io/
 # pipreqs --encoding utf-8 "D:\Dropbox\Empresa\CBRE\PROYECTO_BUSQUEDA_INMUEBLES\APP"
 
