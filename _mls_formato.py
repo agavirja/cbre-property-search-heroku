@@ -133,7 +133,7 @@ def main(inputvar):
               </head>
               <body>
                 <div id="popupContent" style="cursor:pointer; display: flex; flex-direction: column; flex: 1;width:200px;">
-                    <a href="https://cbre-property-981cc52a6655.herokuapp.com/Ficha_del_inmueble?code={items['code']}&tiponegocio={items['tiponegocio'].lower()}&tipoinmueble={items['tipoinmueble'].lower()}" target="_blank" style="color: black;">
+                    <a href="http://urbextestapp.streamlit.app/Ficha_del_inmueble?code={items['code']}&tiponegocio={items['tiponegocio'].lower()}&tipoinmueble={items['tipoinmueble'].lower()}" target="_blank" style="color: black;">
                         <div class="property-image">
                           <img src="{imagen_principal}"  alt="property image" onerror="this.src='https://personal-data-bucket-online.s3.us-east-2.amazonaws.com/sin_imagen.png';">
                         </div>
@@ -214,7 +214,7 @@ def main(inputvar):
             <div class="col-xl-3 col-sm-6 mb-xl-2 mb-2">
               <div class="card h-100">
                 <div class="card-body p-3">
-                <a href="https://cbre-property-981cc52a6655.herokuapp.com/Ficha_del_inmueble?code={items['code']}&tiponegocio={items['tiponegocio'].lower()}&tipoinmueble={items['tipoinmueble'].lower()}" target="_blank" style="color: black;">
+                <a href="http://urbextestapp.streamlit.app/Ficha_del_inmueble?code={items['code']}&tiponegocio={items['tiponegocio'].lower()}&tipoinmueble={items['tipoinmueble'].lower()}" target="_blank" style="color: black;">
                     <div class="property-image">
                       <img src="{imagen_principal}"  alt="property image" onerror="this.src='https://personal-data-bucket-online.s3.us-east-2.amazonaws.com/sin_imagen.png';">
                     </div>

@@ -44,7 +44,7 @@ def display_lotespot(datalotes,polygon=None,latitud=None,longitud=None,barmanpre
             <html>
                 <body>
                     <div id="popupContent" style="cursor:pointer; display: flex; flex-direction: column; flex: 1;width:220px;">
-                        <a href="https://cbre-property-981cc52a6655.herokuapp.com/Busqueda_lotes_poligono?code={codigos}" target="_blank" style="color: black;">
+                        <a href="http://localhost:8501/Busqueda_lotes_poligono?code={codigos}" target="_blank" style="color: black;">
                             {combinacion}
                         </a>
                     </div>

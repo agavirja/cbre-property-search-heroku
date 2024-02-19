@@ -40,9 +40,16 @@ def main(inputvar):
     
     datalotes,datacatastro,datavigencia,datasnrprocesos,datasnrtable = getinfopredialpolygon(inputvar)
 
+    #st.dataframe(datalotes)
+    #st.dataframe(datacatastro)
+    #st.dataframe(datavigencia)
+    #st.dataframe(datasnrprocesos)
+    #st.dataframe(datasnrtable)
+
     latitud  = 4.610270
     longitud = -74.079573
     polygon  = inputvar['polygon'] if 'polygon' in inputvar and isinstance(inputvar['polygon'], str) else None
+    
     if polygon is not None:
         try:
             polygonl = wkt.loads(polygon)
@@ -83,8 +90,6 @@ def main(inputvar):
                         ]
 
     display_listjson(resumen,2)
-    
-
     #-------------------------------------------------------------------------#
     # Display Mapa poligonos
     display_transacciones_polygon(dataprocesos_filter,datalotes,polygon=polygon,latitud=latitud,longitud=longitud,showheader=False)
@@ -163,7 +168,6 @@ def main(inputvar):
     # Analisis demografico
     if 'polygon' in inputvar and isinstance(inputvar['polygon'], str):
         display_dane(inputvar['polygon'])
-
     
 @st.cache_data
 def dataavaluostat(datavigencia,datacatastro):
