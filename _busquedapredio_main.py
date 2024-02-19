@@ -26,34 +26,25 @@ def main():
         if key not in st.session_state: 
             st.session_state[key] = value
 
-    habitacionesmin = 0
-    habitacionesmax = 0
-    
     if not st.session_state.reporte_busquedapredio:
         col1,col2,col3 = st.columns([1,1,2])
         with col1:
             seleccion = st.selectbox('Tipo de inmueble', options=['Todos','Apartamento', 'Bodega', 'Casa', 'Consultorio', 'Edificio', 'Hotel', 'Local', 'Oficina', 'Parqueadero'])
-        
+
         with col2:
             st.text_input('',disabled=True)
-
         with col1:
             areamin = st.number_input('Área mínima',value=0,min_value=0)
-            
         with col2:
             areamax = st.number_input('Área máxima',value=0,min_value=0)
-            
-        if any([x for x in ['Apartamento','Casa'] if x in seleccion]):
-            with col1:
-                habitacionesmin = st.selectbox('Habitaciones mínimas',options=[1,2,3,4,5,6],index=0)
-            with col2:
-                habitacionesmax = st.selectbox('Habitaciones máximas',options=[1,2,3,4,5,6],index=5)
-                 
+        with col1:
+            antiguedadmin = st.number_input('Antiguedad mínima (años de construido)',value=0,min_value=0)
+        with col2:
+            antiguedadmax = st.number_input('Antiguedad máxima (años de construido)',value=0,min_value=0)
         with col1:
             tipoubicacion = st.radio("Ubicación",["***Toda la ciudad***", "***Poligono***"],horizontal=True)
             if 'Toda la ciudad' in tipoubicacion:
                 st.markdown("***<sup>se mostrará un máiximo de 1,000 predios</sup>***", unsafe_allow_html=True)
-
         with col3:
             if 'Poligono' in tipoubicacion:
                 m    = folium.Map(location=[st.session_state.latitud, st.session_state.longitud], zoom_start=st.session_state.zoom_start,tiles="cartodbpositron")
@@ -96,8 +87,8 @@ def main():
             'tipoinmueble':seleccion,
             'areamin':areamin,
             'areamax':areamax,
-            'habitacionesmin':habitacionesmin,
-            'habitacionesmax':habitacionesmax,
+            'antiguedadmin':antiguedadmin,
+            'antiguedadmax':antiguedadmax,
             'polygon':polygon,
             }
 

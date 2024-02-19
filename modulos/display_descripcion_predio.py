@@ -70,8 +70,11 @@ def display_descripcion_predio(dataparticular_catastro=pd.DataFrame(),datagenera
             </tr>
             """
     elif not datageneral_catastro.empty:
-        variable1 = [{'variable': 'Barrio:', 'value': 'prenbarrio'}, {'variable': 'Dirección:', 'value': 'formato_direccion'},{'variable': 'Antiguedad min:', 'value': 'antiguedad_mintotal'},{'variable': 'Antiguedad max:', 'value': 'antiguedad_maxtotal'}]
-        variable2 = [{'variable': 'Estrato:', 'value': 'estrato'},{'variable': '# de predios:', 'value': 'prediostotal'}, {'variable': 'Área construida total:', 'value': 'areaconstruidatotal'}, {'variable': 'Área de terreno total:', 'value': 'areaterrenototal'}]
+        #variable1 = [{'variable': 'Barrio:', 'value': 'prenbarrio'}, {'variable': 'Dirección:', 'value': 'formato_direccion'},{'variable': 'Antiguedad min:', 'value': 'antiguedad_mintotal'},{'variable': 'Antiguedad max:', 'value': 'antiguedad_maxtotal'}]
+        #variable2 = [{'variable': 'Estrato:', 'value': 'estrato'},{'variable': '# de predios:', 'value': 'prediostotal'}, {'variable': 'Área construida total:', 'value': 'areaconstruidatotal'}, {'variable': 'Área de terreno total:', 'value': 'areaterrenototal'}]
+        
+        variable1 = [{'variable': 'Barrio:', 'value': 'prenbarrio'}, {'variable': 'Dirección:', 'value': 'formato_direccion'},{'variable': 'Estrato:', 'value': 'estrato'},{'variable': 'Antiguedad min:', 'value': 'prevetustzmin'},{'variable': 'Antiguedad max:', 'value': 'prevetustzmax'}]
+        variable2 = [{'variable': '# de predios:', 'value': 'predios'}, {'variable': 'Área construida total:', 'value': 'preaconst'}, {'variable': 'Área de terreno total:', 'value': 'preaterre'}, {'variable': 'Pisos construidos:', 'value': 'connpisos'}, {'variable': 'Sotanos:', 'value': 'connsotano'}]
         html_paso = ""
         K         = max(len(variable1),len(variable2))
         for i in range(K):
@@ -81,7 +84,7 @@ def display_descripcion_predio(dataparticular_catastro=pd.DataFrame(),datagenera
                 if any([value in x for x in ['areaconstruida','areaterreno','preaconst','preaterre','areaconstruida_uso','areaterreno_uso','areaconstruidatotal','areaterrenototal']  ]):
                     try: valor = round(valor,2)
                     except: pass
-                if any([value in x for x in ['estrato','predios','prevetustz','antiguedad_min','antiguedad_max','predios_uso','prediostotal','antiguedad_min_uso','antiguedad_max_uso','antiguedad_mintotal','antiguedad_maxtotal']]):
+                if any([value in x for x in ['estrato','predios','prevetustz','antiguedad_min','antiguedad_max','predios_uso','prediostotal','antiguedad_min_uso','antiguedad_max_uso','antiguedad_mintotal','antiguedad_maxtotal','prevetustzmin','prevetustzmax','connpisos','connsotano']]):
                     try: valor = int(valor)
                     except: pass
                 html_paso1 = f"""
@@ -132,8 +135,7 @@ def display_descripcion_predio(dataparticular_catastro=pd.DataFrame(),datagenera
               {html_paso1}
               {html_paso2}
             </tr>
-            """
-            
+            """        
     if html_paso:
         tabla = f"""
         <div class="css-table">
@@ -153,18 +155,15 @@ def display_descripcion_predio(dataparticular_catastro=pd.DataFrame(),datagenera
                 height: 100%;
             }
             .css-table table {
-                border-collapse: collapse;
-                border-spacing: 0;
                 width: 100%;
-                border-top: none;
             }
             .css-table td {
-                border-bottom: 1px solid #dee2e6;
                 text-align: left;
             }
             .css-table h6 {
                 margin: 0; 
                 line-height: 1; 
+                font-size: 50px;
             }
         </style>
         """

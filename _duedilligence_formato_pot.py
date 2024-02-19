@@ -90,12 +90,12 @@ def main(inputvar):
     col1,col2 = st.columns(2)
     with col1:
         nombre = 'Análisis del edificio'
-        html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre" class="custom-button">{nombre}</a></body></html>"""
+        html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre" class="custom-button">{nombre}</a></body></html>"""
         html = BeautifulSoup(html, 'html.parser')
         st.markdown(html, unsafe_allow_html=True)
     with col2:
         nombre = 'Tendencia de mercado en la zona'
-        html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio" class="custom-button">{nombre}</a></body></html>"""
+        html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio" class="custom-button">{nombre}</a></body></html>"""
         html = BeautifulSoup(html, 'html.parser')
         st.markdown(html, unsafe_allow_html=True)
    

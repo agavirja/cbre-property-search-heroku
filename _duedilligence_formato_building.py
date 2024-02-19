@@ -12,6 +12,7 @@ from scripts.getlatlng import getlatlng
 from scripts.getdatamarket import getdatamarketbycoddir
 from scripts.inmuebleANDusosuelo import usosuelo2inmueble
 from scripts.coddir import coddir 
+from scripts.merge_usosuelo_actividad import merge_usosuelo_actividad
 
 from modulos.map_streetview import map_streetview
 from modulos.display_descripcion_predio import display_descripcion_predio
@@ -19,14 +20,15 @@ from modulos.display_shd import display_shd
 from modulos.display_snr_proceso import display_snr_proceso
 from modulos.display_predios_lote import display_predios_lote
 from modulos.display_datamarket import display_datamarket
+from modulos.display_precuso import display_precuso
 
 def main(inputvar):
-    
+
     with st.spinner('Buscando información'):
-        chip,datacatastro,databarmapre,datalote,datavigencia,datasnrprocesos,datasnrtable = getinfopredio(inputvar)
-        datacatastro = addinfocatastro(datacatastro,datavigencia)
-    
-    if datacatastro.empty and databarmapre.empty:
+        datalotes,datacatastro,datavigencia,datasnrprocesos,datasnrtable = getinfopredio(inputvar)
+        datacatastro = merge_usosuelo_actividad(datacatastro)
+
+    if datalotes.empty:
         desc_predio = ""
         if 'chip' in inputvar and inputvar['chip']:
             desc_predio = f" para el chip {inputvar['chip']}"
@@ -66,27 +68,19 @@ def main(inputvar):
         texto = BeautifulSoup(html, 'html.parser')
         st.markdown(texto, unsafe_allow_html=True)
         
-    latitud, longitud, direccion = None, None, None
-    if not datacatastro.empty:
-        if 'latitud' in datacatastro and datacatastro['latitud'].iloc[0]: latitud = datacatastro['latitud'].iloc[0]
-        if 'longitud' in datacatastro and datacatastro['longitud'].iloc[0]: longitud = datacatastro['longitud'].iloc[0]
-        if 'formato_direccion' in datacatastro and datacatastro['formato_direccion'].iloc[0]: direccion = datacatastro['formato_direccion'].iloc[0]
+        
+    latitud   = datalotes['latitud'].iloc[0] if 'latitud' in datalotes and isinstance(datalotes['latitud'].iloc[0], float) else None
+    longitud  = datalotes['longitud'].iloc[0] if 'longitud' in datalotes and isinstance(datalotes['longitud'].iloc[0], float) else None
+    direccion = datalotes['formato_direccion'].iloc[0] if 'formato_direccion' in datalotes and isinstance(datalotes['formato_direccion'].iloc[0], str) else None
     if not direccion and 'direccion' in inputvar and inputvar['direccion']:
         direccion = inputvar['direccion']
-        
-    if not latitud and not longitud: 
-        ciudad           = 'bogota'
-        latitud,longitud = getlatlng(f"{direccion},{ciudad},colombia")
-        
-    #-------------------------------------------------------------------------#
-    # Mapa y streetview
-    #-------------------------------------------------------------------------#
+      
     polygon = None
-    if not datalote.empty:
-        polygon = wkt.loads(datalote['wkt'].iloc[0]) 
+    if not datalotes.empty and 'wkt' in datalotes:
+        polygon = wkt.loads(datalotes['wkt'].iloc[0]) 
         map_streetview(polygon)
         
-    if not latitud and not longitud and polygon:
+    if latitud is None and longitud is None and polygon:
         try:
             polygonl = wkt.loads(polygon) 
             latitud  = polygonl.centroid.y
@@ -97,6 +91,13 @@ def main(inputvar):
                 longitud = polygon.centroid.x
             except: pass
         
+    if not latitud and not longitud: 
+        ciudad           = 'bogota'
+        latitud,longitud = getlatlng(f"{direccion},{ciudad},colombia")
+        
+    #-------------------------------------------------------------------------#
+    # Mapa y streetview
+    #-------------------------------------------------------------------------#
     if latitud and longitud and not polygon:
         map_streetview(polygon=None,latitud=latitud,longitud=longitud)
     
@@ -104,21 +105,32 @@ def main(inputvar):
     #-------------------------------------------------------------------------#
     # Descripcion del predio
     #-------------------------------------------------------------------------#
-    display_descripcion_predio(datageneral_catastro=datacatastro)
+    display_descripcion_predio(datageneral_catastro=datalotes)
+    
+    if not datalotes.empty and 'infoByprecuso' in datalotes:
+        datapaso  = pd.DataFrame(datalotes['infoByprecuso'].iloc[0])
+        datamerge = datalotes[['barmanpre','preaconst']]
+        datamerge = datamerge.drop_duplicates(subset='barmanpre',keep='first')
+        datapaso  = datapaso.merge(datamerge,on='barmanpre',how='left',validate='m:1')
+        datapaso['porcentaje'] = datapaso['preaconst_precuso']/datapaso['preaconst']
+        if len(datapaso)>1:
+            display_precuso(data=datapaso,titulo='Tipos de inmuebles')
 
     #-------------------------------------------------------------------------#
     # Descripcion SNR del predio
     #-------------------------------------------------------------------------#
     display_snr_proceso(datasnrprocesos,titulo='Transacciones del edificio')
- 
+
     #---------------------------------------------------------------------#
     # Descripcion predios en el edificio
+    #-------------------------------------------------------------------------#
+    datacatastro = addinfocatastro(datacatastro,datavigencia)
     display_predios_lote(datacatastro,titulo='Descripción de predios')
-
+    
     #---------------------------------------------------------------------#   
     # Descargar informacion propietarios
     datapropietarios = mergepropietarios(datacatastro,datavigencia)
-    
+
     col1,col2  = st.columns([1,3])
     if not datapropietarios.empty:
         dataexport = pd.DataFrame()
@@ -145,7 +157,7 @@ def main(inputvar):
     datamarketventa    = pd.DataFrame()
     datamarketarriendo = pd.DataFrame()
     tipoinmueble       = None
-    fcoddir            = (datacatastro['coddir'].iloc[0] if not datacatastro.empty and 'coddir' in datacatastro
+    fcoddir            = (datalotes['coddir'].iloc[0] if not datalotes.empty and 'coddir' in datalotes
                            else coddir(direccion) if direccion is not None and direccion != '' else None)
     
     if not datacatastro.empty:
@@ -198,16 +210,16 @@ def main(inputvar):
     """
     col1,col2 = st.columns(2)
     barmanpre = None
-    if not datacatastro.empty:
-        barmanpre = datacatastro['barmanpre'].iloc[0]
+    if not datalotes.empty:
+        barmanpre = datalotes['barmanpre'].iloc[0]
         with col1:
             nombre = 'Tendencia de mercado en la zona'
-            html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio" class="custom-button">{nombre}</a></body></html>"""
+            html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio" class="custom-button">{nombre}</a></body></html>"""
             html = BeautifulSoup(html, 'html.parser')
             st.markdown(html, unsafe_allow_html=True)
         with col2:
             nombre = 'Análisis del P.O.T'
-            html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=pot" class="custom-button">{nombre}</a></body></html>"""
+            html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=pot" class="custom-button">{nombre}</a></body></html>"""
             html = BeautifulSoup(html, 'html.parser')
             st.markdown(html, unsafe_allow_html=True)
 
@@ -233,7 +245,7 @@ def main(inputvar):
     </script>
     """
     )
-    
+
 @st.cache_data
 def addinfocatastro(datacatastro,datavigencia):
     datamerge = pd.DataFrame()

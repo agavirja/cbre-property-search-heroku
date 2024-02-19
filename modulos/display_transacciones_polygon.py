@@ -85,7 +85,7 @@ def display_transacciones_polygon(dataprocesos=pd.DataFrame(),datalotespolygon=p
             
             pop_actividad = ""
             pop_usosuelo  = "" 
-            if items['actividad'] is not None:
+            if 'actividad' in items and items['actividad'] is not None:
                 if isinstance(items['actividad'], list):
                     pop_actividad = "<b>Actividad del predio:</b><br>"
                     for j in items['actividad']:
@@ -93,48 +93,69 @@ def display_transacciones_polygon(dataprocesos=pd.DataFrame(),datalotespolygon=p
                         &bull; {j}<br>
                         """
                         
-            if items['usosuelo'] is not None:
+            if 'usosuelo' in items and items['usosuelo'] is not None:
                 if isinstance(items['usosuelo'], list):
                     pop_usosuelo = "<b>Uso del suelo:</b><br>"
                     for j in items['usosuelo']:
                         pop_usosuelo += f"""
                         &bull; {j}<br>
                         """          
-            try:
-                if items['antiguedad_min']<items['antiguedad_max']:
-                    antiguedad = f"<b> Antiguedad:</b> {items['antiguedad_min']}-{items['antiguedad_max']}<br>"
-                else:
-                    antiguedad = f"<b> Antiguedad:</b> {int(items['antiguedad_min'])}<br>"
-            except: antiguedad = "<b> Antiguedad:</b> Sin información <br>"
-            try:    estrato = f"<b> Estrato:</b> {int(items['estrato'])}<br>"
-            except: estrato = "<b> Estrato:</b> Sin información <br>"
-            try:    numero_predios = f"<b> Número de predios:</b> {int(items['predios'])}<br>"
-            except: numero_predios = "<b> Número de predios:</b> Sin información <br>"
-            try:    transacciones =  f"<b> Transacciones:</b> {int(items['transacciones'])}<br>"
-            except: transacciones = "<b> Transacciones:</b> Sin información <br>"
-            try:    valormt2transacciones = f"<b> Valor mt2 transacciones:</b> ${items['valortransaccionesmt2']:,.0f}<br>"
-            except: valormt2transacciones = "<b> Valor mt2Transacciones:</b> Sin información <br>"
-            try:    areaconstruida = f"<b> Área total construida:</b> {round(items['areaconstruida'],2)}<br>"
-            except: areaconstruida = "<b> Área total construida:</b> Sin información <br>"
-            try:    areaterreno = f"<b> Área total terreno:</b> {round(items['areaterreno'],2)}<br>"
-            except: areaterreno = "<b> Área total terreno:</b> Sin información <br>"            
+
+            antiguedad            = f"<b> Antiguedad:</b> {items['antiguedad_min']}<br>" if 'antiguedad_min' in items and (isinstance(items['antiguedad_min'], float) or isinstance(items['antiguedad_min'], int)) else ''
+            estrato               = f"<b> Estrato:</b> {int(items['estrato'])}<br>" if 'estrato' in items and (isinstance(items['estrato'], float) or isinstance(items['estrato'], int)) else ''
+            numero_predios        = f"<b> Número de predios:</b> {int(items['predios'])}<br>" if 'predios' in items and (isinstance(items['predios'], float) or isinstance(items['predios'], int)) else ''
+            transacciones         = f"<b> Transacciones:</b> {int(items['transacciones'])}<br>" if 'transacciones' in items and (isinstance(items['transacciones'], float) or isinstance(items['transacciones'], int)) else ''
+            valormt2transacciones = f"<b> Valor mt2 transacciones:</b> ${items['valortransaccionesmt2']:,.0f}<br>" if 'valortransaccionesmt2' in items and (isinstance(items['valortransaccionesmt2'], float) or isinstance(items['valortransaccionesmt2'], int)) else ''
+            areaconstruida        = f"<b> Área total construida:</b> {round(items['areaconstruida'],2)}<br>" if 'areaconstruida' in items and (isinstance(items['areaconstruida'], float) or isinstance(items['areaconstruida'], int))  else ''
+            areaterreno           = f"<b> Área total terreno:</b> {round(items['areaterreno'],2)}<br>" if 'areaterreno' in items and (isinstance(items['areaterreno'], float) or isinstance(items['areaterreno'], int))else ''
+            direccion             = f"<b> Direccion:</b> {items['direccion']}<br>" if 'direccion' in items else ''
+            barrio                = f"<b> Barrio:</b> {items['barrio']}<br>" if 'barrio' in items else ''
+                        
+            direccion_formato = f"<b> Direccion:</b> {items['formato_direccion']}<br>" if 'formato_direccion' in items and direccion=='' else ''
+            preaconst         = f"<b> Área total construida:</b> {round(items['preaconst'],2)}<br>" if 'preaconst' in items and (isinstance(items['preaconst'], float) or isinstance(items['preaconst'], int)) and areaconstruida=='' else ''
+            preaterre         = f"<b> Área total terreno:</b> {round(items['preaterre'],2)}<br>" if 'preaterre' in items and (isinstance(items['preaterre'], float) or isinstance(items['preaterre'], int)) and areaterreno=='' else ''
+            prevetustez       = f"<b> Antiguedad:</b> {int(items['prevetustzmin'])}<br>" if 'prevetustzmin' in items and (isinstance(items['prevetustzmin'], float) or isinstance(items['prevetustzmin'], int)) and antiguedad=='' else ''
+            connpisos         = f"<b> Pisos construidos:</b> {int(items['connpisos'])}<br>" if 'connpisos' in items and (isinstance(items['connpisos'], float) or isinstance(items['connpisos'], int)) else ''
+            prenbarrio        = f"<b> Barrio:</b> {items['prenbarrio']}<br>" if 'prenbarrio' in items and barrio=='' else ''
+            
+            infoprecuso = ""
+            if 'infoByprecuso' in items: 
+                for witer in items['infoByprecuso']:
+                    infoprecuso += f"""
+                    <b><br>
+                    <b> Uso del suelo:</b> {witer['usosuelo']}<br>
+                    <b> Predios:</b> {witer['predios_precuso']}<br>                    
+                    """
+                    try:
+                        infoprecuso += f"""
+                        <b> % del Área:</b>{witer['preaconst_precuso']/items['preaconst']:,.2%}<br>
+                        """
+                    except: pass
+
             popup_content =  f'''
             <!DOCTYPE html>
             <html>
                 <body>
                     <div id="popupContent" style="cursor:pointer; display: flex; flex-direction: column; flex: 1;width:200px;">
-                        <a href="http://urbextestapp.streamlit.app/Due_dilligence_digital?code={items['barmanpre']}&variable=barmanpre" target="_blank" style="color: black;">
-                            <b> Direccion:</b> {items['direccion']}<br>
+                        <a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={items['barmanpre']}&variable=barmanpre" target="_blank" style="color: black;">
+                            {direccion}
+                            {direccion_formato}
                             {areaconstruida}
+                            {preaconst}
                             {areaterreno}
+                            {preaterre}
                             {numero_predios}
                             {transacciones}
                             {valormt2transacciones}
+                            {connpisos}
                             {pop_actividad}
                             {pop_usosuelo}
-                            <b> Barrio:</b> {items['barrio']}<br>
+                            {barrio}
+                            {prenbarrio}
                             {estrato}
                             {antiguedad}
+                            {prevetustez}
+                            {infoprecuso}
                         </a>
                     </div>
                 </body>

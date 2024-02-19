@@ -19,6 +19,7 @@ def splitdate(x,pos):
     
 @st.cache_data
 def getinfopredial(inputvar):
+    
     user        = st.secrets["user_bigdata"]
     password    = st.secrets["password_bigdata"]
     host        = st.secrets["host_bigdata_lectura"]
