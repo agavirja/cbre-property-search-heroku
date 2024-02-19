@@ -15,8 +15,6 @@ shapely
 SQLAlchemy
 streamlit
 streamlit_folium
-xgboost
-scikit-learn
 unidecode 
 openpyxl
 streamlit_aggrid
