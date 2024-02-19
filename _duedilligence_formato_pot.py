@@ -61,44 +61,14 @@ def main(inputvar):
     # Display POT
     display_pot(result,datamanzanalotes,datamanzana,latitud,longitud)
     
-    #-------------------------------------------------------------------------#
-    # Botones para redireccionar
-    style = """
-    <style>
-    .custom-button {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #68c8ed;
-        color: #ffffff; 
-        font-weight: bold;
-        text-decoration: none;
-        border-radius: 20px;
-        width: 100%;
-        border: none;
-        cursor: pointer;
-        text-align: center;
-        letter-spacing: 1px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-    }
-    .custom-button:visited {
-        color: #ffffff;
-    }
-    </style>
-    """
     
     col1,col2 = st.columns(2)
     with col1:
-        nombre = 'Análisis del edificio'
-        html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre" class="custom-button">{nombre}</a></body></html>"""
-        html = BeautifulSoup(html, 'html.parser')
-        st.markdown(html, unsafe_allow_html=True)
+        if st.button('Análisis del edificio'):
+            webbrowser.open_new_tab(f"http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre")
     with col2:
-        nombre = 'Tendencia de mercado en la zona'
-        html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">{style}</head><body><a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio" class="custom-button">{nombre}</a></body></html>"""
-        html = BeautifulSoup(html, 'html.parser')
-        st.markdown(html, unsafe_allow_html=True)
-   
+        if st.button('Tendencia de mercado en la zona'):
+            webbrowser.open_new_tab(f"http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio")
     components.html(
         """
     <script>

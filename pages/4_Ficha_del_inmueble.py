@@ -7,8 +7,7 @@ st.set_page_config(layout="wide",initial_sidebar_state="auto")
 formato = {
            'code':None,
            'tiponegocio':None,
-           'tipoinmueble':None,
-           'ficha_inputvar':{}
+           'tipoinmueble':None
            }
 
 for key,value in formato.items():
@@ -25,5 +24,7 @@ if 'tipoinmueble' in args:
     st.session_state.tipoinmueble = args['tipoinmueble'][0]
 
 if st.session_state.code is not None and st.session_state.tiponegocio is not None and st.session_state.tipoinmueble is not None:
-    st.session_state.ficha_inputvar = {'code':st.session_state.code,'tiponegocio':st.session_state.tiponegocio,'tipoinmueble':st.session_state.tipoinmueble}
-main(st.session_state.ficha_inputvar)
+    inputvar = {'code':st.session_state.code,'tiponegocio':st.session_state.tiponegocio,'tipoinmueble':st.session_state.tipoinmueble}
+else: inputvar = {}
+
+main(inputvar)

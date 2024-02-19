@@ -1,21 +1,10 @@
 import streamlit as st
 import numpy as np
 import streamlit.components.v1 as components
-import hashlib
 from bs4 import BeautifulSoup
-
 
 def display_shd(datavigencia,titulo=''):
     if not datavigencia.empty:
-        
-        #---------------------------------------------------------------------#
-        # url predial [posterior a 2024] [digital ocean]
-        datavigencia['urlpredial'] = datavigencia['idSoporteTributario'].apply(lambda x: f"https://oficinavirtual.shd.gov.co/barcode/certificacion?idSoporte={x}")
-        idd = datavigencia['vigencia']>=2024
-        if sum(idd)>0:
-            datavigencia.loc[idd,'urlpredial'] = datavigencia.loc[idd].apply(lambda x: geturl(x['chip'],x['vigencia']),axis=1)
-        #---------------------------------------------------------------------#
-
         dataexport = datavigencia.copy()
         for i in ['vigencia', 'indPago', 'tipoPropietario', 'tipoDocumento', 'nroIdentificacion', 'copropiedad', 'primerNombre', 'segundoNombre', 'primerApellido', 'segundoApellido', 'telefono1', 'telefono2', 'telefono3', 'email1', 'email2']:
             if i not in datavigencia:
@@ -45,7 +34,7 @@ def display_shd(datavigencia,titulo=''):
                 <h6 class="mb-0 text-sm">{i['indPago']}</h6>
               </td>         
               <td class="align-middle text-center text-sm" style="border: none;padding: 8px;">
-                 <a href="{i['urlpredial']}" target="_blank">
+                 <a href="https://oficinavirtual.shd.gov.co/barcode/certificacion?idSoporte={i['idSoporteTributario']}" target="_blank">
                  <img src="https://personal-data-bucket-online.s3.us-east-2.amazonaws.com/publicimg/pdf.png" alt="link" width="20" height="20">
                  </a>                    
               </td>
@@ -242,12 +231,3 @@ def convert_df(df):
 def phoneformat(x):
     try:    return str(int(x))
     except: return x
-
-def generar_codigo(x):
-    hash_sha256 = hashlib.sha256(x.encode()).hexdigest()
-    codigo      = hash_sha256[:12]
-    return codigo
-
-def geturl(chip,year):
-    filename = generar_codigo(f'{year}{chip}{year}')
-    return f'https://prediales.nyc3.digitaloceanspaces.com/{filename.upper()}.pdf'

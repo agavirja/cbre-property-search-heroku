@@ -38,7 +38,7 @@ def display_predios_lote(datacatastro=pd.DataFrame(),titulo=''):
             html_tabla += f""" 
             <tr>
               <td class="align-middle text-center text-sm" style="border: none;padding: 8px;margin-top: 0px;margin-bottom: -20px;">
-                 <a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={i['prechip']}&variable=chip" target="_blank">
+                 <a href="http://urbextestapp.streamlit.app/Due_dilligence_digital?code={i['prechip']}&variable=chip" target="_blank">
                  <img src="https://personal-data-bucket-online.s3.us-east-2.amazonaws.com/publicimg/pdf.png" alt="link" width="20" height="20">
                  </a>                    
               </td>

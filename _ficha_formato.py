@@ -4,7 +4,6 @@ import pandas as pd
 import re
 import folium
 import tempfile
-import time
 
 from streamlit_folium import st_folium
 from bs4 import BeautifulSoup
@@ -16,24 +15,13 @@ from scripts.getdatamarket  import getdatamarketbycode
 
 def main(code=None,tipoinmueble=None,tiponegocio=None):
     
+
     if 'html_pdf' not in st.session_state:
         st.session_state.html_pdf = None
         
     data_inmueble = getdatamarketbycode(code=code,tipoinmueble=tipoinmueble,tiponegocio=tiponegocio)
     
-    if data_inmueble.empty:
-        st.error('Inmueble no encontrado')
-        time.sleep(5)
-        formato = {
-                   'code':None,
-                   'tiponegocio':None,
-                   'tipoinmueble':None,
-                   'ficha_inputvar':{}
-                   }
-        for key,value in formato.items():
-            st.session_state[key] = value
-        st.rerun()
-    else:
+    if not data_inmueble.empty:
         data_inmueble = data_inmueble.to_dict(orient='records')[0]
         
         API_KEY      = st.secrets["API_KEY"]
