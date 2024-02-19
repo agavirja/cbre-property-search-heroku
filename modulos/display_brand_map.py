@@ -31,7 +31,7 @@ def display_brand_map(data,latitud,longitud):
             <html>
                 <body>
                     <div id="popupContent" style="cursor:pointer; display: flex; flex-direction: column; flex: 1;width:200px;">
-                        <a href="http://urbextestapp.streamlit.app/Due_dilligence_digital?code={items['lotcodigo']}&variable=barmanpre" target="_blank" style="color: black;">
+                        <a href="https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={items['lotcodigo']}&variable=barmanpre" target="_blank" style="color: black;">
                             {empresa}
                             {direccion}
                             {nombre}

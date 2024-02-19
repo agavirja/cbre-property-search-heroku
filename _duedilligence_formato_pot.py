@@ -65,10 +65,10 @@ def main(inputvar):
     col1,col2 = st.columns(2)
     with col1:
         if st.button('Análisis del edificio'):
-            webbrowser.open_new_tab(f"http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre")
+            webbrowser.open_new_tab(f"https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre")
     with col2:
         if st.button('Tendencia de mercado en la zona'):
-            webbrowser.open_new_tab(f"http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio")
+            webbrowser.open_new_tab(f"https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio")
     components.html(
         """
     <script>

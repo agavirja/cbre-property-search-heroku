@@ -43,7 +43,7 @@ def display_datamarket(datamarket,tiponegocio):
         for i, inmueble in dfmap.iterrows():
             if isinstance(inmueble['imagen_principal'], str) and len(inmueble['imagen_principal'])>20: imagen_principal =  inmueble['imagen_principal']
             else: imagen_principal = "https://personal-data-bucket-online.s3.us-east-2.amazonaws.com/sin_imagen.png"
-            url_export   = f"http://urbextestapp.streamlit.app/Ficha_del_inmueble?code={inmueble['code']}&tiponegocio={tiponegocio.lower()}&tipoinmueble={inmueble['tipoinmueble'].lower()}" 
+            url_export   = f"https://cbre-property-981cc52a6655.herokuapp.com/Ficha_del_inmueble?code={inmueble['code']}&tiponegocio={tiponegocio.lower()}&tipoinmueble={inmueble['tipoinmueble'].lower()}" 
             if isinstance(inmueble['direccion'], str): direccion = inmueble['direccion'][0:35]
             else: direccion = '&nbsp'
                 

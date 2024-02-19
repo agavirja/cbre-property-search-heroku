@@ -171,13 +171,13 @@ def main(inputvar):
         barmanpre = datapredio['barmanpre'].iloc[0]
         with col1:
             if st.button('Análisis del edificio'):
-                webbrowser.open_new_tab(f"http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre")
+                webbrowser.open_new_tab(f"https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre")
         with col2:
             if st.button('Tendencia de mercado en la zona'):
-                webbrowser.open_new_tab(f"http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio")
+                webbrowser.open_new_tab(f"https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=radio")
     with col1:
         if st.button('Análisis del P.O.T'):
-                webbrowser.open_new_tab(f"http://urbextestapp.streamlit.app/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=pot")
+                webbrowser.open_new_tab(f"https://cbre-property-981cc52a6655.herokuapp.com/Due_dilligence_digital?code={barmanpre}&variable=barmanpre&tipo=pot")
     #with col2:
     #    if st.button('Valorización y precio de referencia del predio'):
     #        webbrowser.open_new_tab('www.google.com')
